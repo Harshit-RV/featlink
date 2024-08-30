@@ -1,0 +1,205 @@
+{
+  "info": {
+    "name": "Feature API",
+    "_postman_id": "12345-67890-abcdef",
+    "description": "Postman collection for Feature API routes",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Feature",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/features/create",
+          "host": ["{{baseUrl}}"],
+          "path": ["features", "create"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"New Feature\",\n  \"description\": \"A test feature for demonstration.\",\n  \"type\": \"UI\",\n  \"imageUrl\": \"https://example.com/image.png\"\n}"
+        },
+        "description": "Creates a new feature."
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Features",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/features/all",
+          "host": ["{{baseUrl}}"],
+          "path": ["features", "all"]
+        },
+        "description": "Retrieves all features."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Feature by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/features/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["features", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "featureId123"
+            }
+          ]
+        },
+        "description": "Retrieves a specific feature by ID."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Features by Publisher",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/features/publisher/:publisher",
+          "host": ["{{baseUrl}}"],
+          "path": ["features", "publisher", ":publisher"],
+          "variable": [
+            {
+              "key": "publisher",
+              "value": "publisherName"
+            }
+          ]
+        },
+        "description": "Retrieves features by publisher."
+      },
+      "response": []
+    },
+    {
+      "name": "Update Feature Status",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/features/status/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["features", "status", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "featureId123"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"IMPLEMENTED\"\n}"
+        },
+        "description": "Updates the status of a feature."
+      },
+      "response": []
+    },
+    {
+      "name": "Add Vote to Feature",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/features/vote/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["features", "vote", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "featureId123"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"isUpvote\": true\n}"
+        },
+        "description": "Adds an upvote or downvote to a feature."
+      },
+      "response": []
+    },
+    {
+      "name": "Update Usefulness Metric",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/features/usefulness/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["features", "usefulness", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "featureId123"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"feedback\": \"yes\"\n}"
+        },
+        "description": "Updates the usefulness metric of a feature."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Feature",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/features/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["features", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "featureId123"
+            }
+          ]
+        },
+        "description": "Deletes a specific feature by ID."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    }
+  ]
+}
