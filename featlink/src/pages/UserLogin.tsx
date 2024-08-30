@@ -56,8 +56,10 @@ export const UserLogin = () => {
 
 
   return (
-    <div className="h-full flex-col flex justify-between items-center bg-gray-50">
-      <AppBar/>
+    <div className="min-h-screen flex-col flex justify-between items-center bg-gray-100">
+      <div className="h-14 w-full">
+        <AppBar/>
+      </div>
       <div className="w-[1000px] h-full flex flex-col gap-5 justify-center ">
         <h1 className="font-black text-3xl">FeatLink</h1>
         <div className="flex flex-col gap-3 text-primaryGreen">
