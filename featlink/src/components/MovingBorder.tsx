@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {
   motion,
@@ -21,12 +22,12 @@ export function AceButton({
 }: {
   borderRadius?: string;
   children: React.ReactNode;
-  as?: unknown;
+  as?: any;
   containerClassName?: string;
   borderClassName?: string;
   duration?: number;
   className?: string;
-  [key: string]: unknown;
+  [key: string]: any;
 }) {
   return (
     <Component

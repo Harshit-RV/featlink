@@ -1,1 +1,4 @@
 featurelink-backend/node_modules/
+featurelink-backend/.env
+**/.env*
+
