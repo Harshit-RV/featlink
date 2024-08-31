@@ -9,23 +9,9 @@ export const AppBar = () => {
   const [ walletAddress, setWalletAddress ] = useState<string | null>(null);
   const [ userData, setUserData ] = useState<UserDoc | null>(null);
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     const address = localStorage.getItem('walletAddress');
-  //     console.log(address);
-  //     if (address) {
-  //       setWalletAddress(address);
-  //     }
-  //     fetchUser();
-  //   }, 10000);
-
-  //   // Cleanup function to clear the interval
-  //   return () => clearInterval(intervalId);
-  // });
 
   useEffect(() => {
       const address = localStorage.getItem('walletAddress');
-      console.log(address);
       if (address) {
         setWalletAddress(address);
       }
@@ -35,7 +21,6 @@ export const AppBar = () => {
   const fetchUser = async () => {
     if (walletAddress == null) return;
     const data = await getUserByAddress(walletAddress);
-    console.log(data);
     setUserData(data);
   }
 
@@ -90,7 +75,9 @@ export const AppBar = () => {
             <img src="/fire.png" alt="Fire" className="h-5 w-5"/>
           </div>
 
-          <Button variant={'outline'} size={'appBar'} className="bg-primaryGreen/10 border-primaryGreen/50 border-2 rounded-full">
+          <Button 
+          onClick={async () => await navigator.clipboard.writeText(walletAddress ?? '')}
+          variant={'outline'} size={'appBar'} className="bg-primaryGreen/10 border-primaryGreen/50 border-2 rounded-full">
                 { walletAddress == null 
                   ? 'Connect Wallet' 
                   : `${walletAddress.slice(0, 10)}..`

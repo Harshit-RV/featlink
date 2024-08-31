@@ -85,8 +85,12 @@ router.put('/featcoin/:id', async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
-    await mintFeatCoinToAddress(user.address, amount);
+    const response = await mintFeatCoinToAddress(user.address, amount);
+
+
+    if (!response) {
+      return res.status(500).json({ message: 'Error transferring tokens' });
+    }
 
     const updatedUser = await updateUserFeatCoinBalance(id, amount);
     if (!updatedUser) {

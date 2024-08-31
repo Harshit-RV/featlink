@@ -16,6 +16,7 @@ export const transferToken = async (tokenAddress : PublicKey, mintWallet : Keypa
     tokenAddress,
     mintWallet.publicKey,
   )
+
   
   await mintTo(
     conn,
@@ -26,12 +27,14 @@ export const transferToken = async (tokenAddress : PublicKey, mintWallet : Keypa
     amount * 100000000
   );
 
+
   const receiverTokenAccount = await getOrCreateAssociatedTokenAccount(
     conn,
     mintWallet,
     tokenAddress,
     receiver
   );
+
 
   const transaction = new Transaction().add(
     createTransferInstruction(
@@ -44,7 +47,9 @@ export const transferToken = async (tokenAddress : PublicKey, mintWallet : Keypa
     )
   );
 
+
   await sendAndConfirmTransaction(conn, transaction, [
     mintWallet,
   ]);
+
 }

@@ -52,12 +52,19 @@ export const getUserByAddress = async (address: string): Promise<UserDoc | null>
 };
 
 export const updateUserFeatCoinBalance = async (id: string, amount: number): Promise<UserDoc | null> => {
+  try {
+    console.log('res.data');
   const res = await axios.put(`${API_URL}/users/featcoin/${id}`, { amount }, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('walletAddress')}`
     }
   });
+  console.log(res.data);
   return res.data;
+} catch (err) {
+  console.error('Error updating user FeatCoin balance:', err);
+  return null;
+}
 };
 
 export const updateUserDailyClaimDate = async (id: string): Promise<UserDoc | null> => {
