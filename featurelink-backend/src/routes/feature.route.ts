@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-  createNewFeature,
+  createFeature,
   getAllFeatures,
   getFeatureById,
   getFeaturesByPublisher,
@@ -8,26 +8,41 @@ import {
   addVoteToFeature,
   updateUsefulnessMetric,
   deleteFeature,
+  getFeaturesByProductId,
 } from '../services/feature.service';
 import { FeatureImplementationStatus } from '../models/Feature';
+import mongoose from 'mongoose';
+import { getUserIdByAddress } from '../services/user.service';
 
 const router = express.Router();
-const userId = '12345'; // Mock user ID
+// const userId = '12345'; // Mock user ID
+
 
 // Route to create a new feature
 router.post('/create', async (req, res) => {
   try {
-    if (!userId) {
-      return res.status(403).end();
+    const authHeader = req.headers.authorization;
+    const walletAddress = authHeader!.startsWith('Bearer ')
+    ? authHeader!.substring(7) 
+    : authHeader;
+
+    if (!walletAddress) {
+      return res.status(401).json({ message: 'Unauthenticated' });
     }
 
-    const { title, description, type, imageUrl } = req.body;
+    const userId = await getUserIdByAddress(walletAddress);
+
+    if (!userId) {
+      return res.status(401).json({ message: 'Unauthenticated' });
+    }
+
+    const { title, description, type, imageUrl, productId } = req.body;
     
     if (!title || !description || !type) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    const newFeature = await createNewFeature({
+    const newFeature = await createFeature({
       publisher: userId,
       title,
       description,
@@ -35,11 +50,13 @@ router.post('/create', async (req, res) => {
       imageUrl,
       upvotes: { count: 0, list: [] },
       downvotes: { count: 0, list: [] },
+      implementationStatus: 'Not Reviewed',
       usefulness: {
         yes: { count: 0, list: [] },
         no: { count: 0, list: [] },
         maybe: { count: 0, list: [] },
       },
+      productId: productId,
     });
 
     return res.status(201).json(newFeature);
@@ -87,6 +104,17 @@ router.get('/publisher/:publisher', async (req, res) => {
   }
 });
 
+router.get('/product/:product', async (req, res) => {
+  try {
+    const { product } = req.params;
+    const features = await getFeaturesByProductId(product);
+    return res.status(200).json(features);
+  } catch (err) {
+    console.error('Error fetching features by product ID:', err);
+    res.status(500).json(err);
+  }
+});
+
 // Route to update feature status by ID
 router.put('/status/:id', async (req, res) => {
   try {
@@ -115,11 +143,22 @@ router.post('/vote/:id', async (req, res) => {
     const { id } = req.params;
     const { isUpvote } = req.body;
 
-    if (!userId) {
-      return res.status(403).end();
+    const authHeader = req.headers.authorization;
+    const walletAddress = authHeader!.startsWith('Bearer ')
+    ? authHeader!.substring(7) 
+    : authHeader;
+
+    if (!walletAddress) {
+      return res.status(401).json({ message: 'Unauthenticated' });
     }
 
-    const updatedFeature = await addVoteToFeature(id, isUpvote, userId);
+    const userId = await getUserIdByAddress(walletAddress);
+
+    if (!userId) {
+      return res.status(401).json({ message: 'Unauthenticated' });
+    }
+
+    const updatedFeature = await addVoteToFeature(id, isUpvote, String(userId));
     if (!updatedFeature) {
       return res.status(404).json({ message: 'Feature not found' });
     }
@@ -135,17 +174,28 @@ router.post('/vote/:id', async (req, res) => {
 router.post('/usefulness/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { feedback } = req.body;
+    const { feedback, address } = req.body;
+
+    const authHeader = req.headers.authorization;
+    const walletAddress = authHeader!.startsWith('Bearer ')
+    ? authHeader!.substring(7) 
+    : authHeader;
+
+    if (!walletAddress) {
+      return res.status(401).json({ message: 'Unauthenticated' });
+    }
+
+    const userId = await getUserIdByAddress(walletAddress);
 
     if (!userId) {
-      return res.status(403).end();
+      return res.status(401).json({ message: 'Unauthenticated' });
     }
 
     if (!['yes', 'no', 'maybe'].includes(feedback)) {
       return res.status(400).json({ message: 'Invalid feedback type' });
     }
 
-    const updatedFeature = await updateUsefulnessMetric(id, feedback, userId);
+    const updatedFeature = await updateUsefulnessMetric(id, feedback, String(userId));
     if (!updatedFeature) {
       return res.status(404).json({ message: 'Feature not found' });
     }
@@ -162,8 +212,19 @@ router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
+    const authHeader = req.headers.authorization;
+    const walletAddress = authHeader!.startsWith('Bearer ')
+    ? authHeader!.substring(7) 
+    : authHeader;
+
+    if (!walletAddress) {
+      return res.status(401).json({ message: 'Unauthenticated' });
+    }
+
+    const userId = await getUserIdByAddress(walletAddress);
+
     if (!userId) {
-      return res.status(403).end();
+      return res.status(401).json({ message: 'Unauthenticated' });
     }
 
     const feature = await getFeatureById(id);

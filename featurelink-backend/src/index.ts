@@ -1,10 +1,8 @@
 import express, { Application, NextFunction, Request, Response, } from 'express';
 import mongoose from 'mongoose';
-// import homeRoutes from './routes/home.route';
-// import monitorRoutes from './routes/monitor.route';
-// import timerRoutes from './routes/timer.route';
-// import clockRoutes from './routes/clock.route';
 import featureRoutes from './routes/feature.route';
+import userRoutes from './routes/user.route';
+import productRoutes from './routes/product.route';
 import config from './config';
 import "dotenv/config"; // To read CLERK_SECRET_KEY and CLERK_PUBLISHABLE_KEY
 import cors from 'cors'; 
@@ -20,6 +18,8 @@ app.use(cors());
 mongoose.connect(config.mongoURI);
 
 app.use('/features', featureRoutes);
+app.use('/users', userRoutes);
+app.use('/products', productRoutes);
 
 // Routes
 // app.use('/', homeRoutes);

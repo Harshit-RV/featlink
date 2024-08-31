@@ -10,14 +10,22 @@ import {
   removeUserNFT,
   deleteUser,
 } from '../services/user.service';
+import { mintFeatCoinToAddress } from '../utils/solana';
 
 const router = express.Router();
 
 // Route to create a new user
 router.post('/create', async (req, res) => {
   try {
-    const { name, address, featCoinBalance, latestDailyClaimDate, nfts } = req.body;
-    const newUser = await createNewUser({ name, address, featCoinBalance, latestDailyClaimDate, nfts });
+    const { name, address } = req.body;
+    console.log(name, address);
+    const newUser = await createNewUser({ 
+      name, 
+      address, 
+      featCoinBalance: 0, 
+      latestDailyClaimDate: new Date(), 
+      nfts: [], 
+    });
     return res.status(201).json(newUser);
   } catch (err) {
     console.error('Error creating user:', err);
@@ -72,6 +80,14 @@ router.put('/featcoin/:id', async (req, res) => {
     const { id } = req.params;
     const { amount } = req.body;
 
+    const user = await getUserById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    await mintFeatCoinToAddress(user.address, amount);
+
     const updatedUser = await updateUserFeatCoinBalance(id, amount);
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
@@ -88,9 +104,8 @@ router.put('/featcoin/:id', async (req, res) => {
 router.put('/daily-claim/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { date } = req.body;
 
-    const updatedUser = await updateUserDailyClaimDate(id, new Date(date));
+    const updatedUser = await updateUserDailyClaimDate(id);
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
     }

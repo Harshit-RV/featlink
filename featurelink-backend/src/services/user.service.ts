@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import User, { UserDoc, NFT } from "../models/User";
 
 /**
@@ -59,8 +60,9 @@ export const updateUserFeatCoinBalance = async (id: string, amount: number): Pro
  * @param date - New daily claim date
  * @returns The updated user document
  */
-export const updateUserDailyClaimDate = async (id: string, date: Date): Promise<UserDoc | null> => {
-  return User.findByIdAndUpdate(id, { latestDailyClaimDate: date }, { new: true });
+export const updateUserDailyClaimDate = async (id: string): Promise<UserDoc | null> => {
+  const currentDate = new Date(); // Current server timestamp
+  return User.findByIdAndUpdate(id, { latestDailyClaimDate: currentDate }, { new: true });
 };
 
 /**
@@ -116,3 +118,13 @@ export const removeUserNFT = async (id: string, nftAddress: string): Promise<Use
 export const deleteUser = async (id: string): Promise<UserDoc | null> => {
   return User.findByIdAndDelete(id);
 };
+
+export const getUserIdByAddress = async (address: string): Promise<mongoose.Schema.Types.ObjectId | null> => {
+  const user = await User.findOne({ address });
+
+  if (!user) {
+    return null;
+  }
+
+  return user._id as mongoose.Schema.Types.ObjectId;
+}

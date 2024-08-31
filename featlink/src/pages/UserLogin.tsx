@@ -46,17 +46,19 @@ export const UserLogin = () => {
   };
 
   const onClick = async () => {
-    await connectWallet();
-    await signMessage();
-
+   
     if (walletStatus === 'Signed') {
+      navigate('/founder');
+    } else {
+      await connectWallet();
+      await signMessage();
       navigate('/founder');
     }
   }
 
 
   return (
-    <div className="min-h-screen flex-col flex justify-between items-center bg-gray-100">
+    <div className="h-screen flex-col flex justify-between items-center bg-gray-100">
       <div className="h-14 w-full">
         <AppBar/>
       </div>
@@ -70,7 +72,7 @@ export const UserLogin = () => {
           <div className="text-lg">FeatLink is a platform that allows you to productively interact with your users in a way that makes your product better for them and everyone else.</div>
           <div className="text-lg">Increase customer satisfaction, increase sales and profit.</div>
         </div>
-        <Button className="w-32 mt-4 bg-green-600 hover:bg-green-600/70" onClick={walletAddress =='Signed' ? () => navigate('/founder') : onClick}>
+        <Button className="w-32 mt-4 bg-green-600 hover:bg-green-600/70" onClick={onClick}>
            { walletStatus == 'Disconnected' ? 'Get Started' : walletStatus == 'Signed' ? "Dashboard" : '...'}
         </Button>
         <div className="h-10"></div>

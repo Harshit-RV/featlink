@@ -20,7 +20,7 @@ export interface UserQuestionMetric {
 }
 
 export interface FeatureDoc extends Document {
-  publisher: string;
+  publisher: mongoose.Schema.Types.ObjectId;
   title: string;
   description: string;
   type: FeatureType;
@@ -31,6 +31,7 @@ export interface FeatureDoc extends Document {
   usefulness: UserQuestionMetric;
   createdAt: Date;
   updatedAt: Date;
+  productId?: mongoose.Schema.Types.ObjectId; // New field
 }
 
 const userReviewMetric: Schema = new Schema(
@@ -52,7 +53,7 @@ const userQuestionMetric: Schema = new Schema(
 
 const featureSchema: Schema = new Schema(
   {
-    publisher: { type: String, required: true },
+    publisher: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
     type: {
@@ -76,10 +77,11 @@ const featureSchema: Schema = new Schema(
     upvotes: userReviewMetric,
     downvotes: userReviewMetric,
     usefulness: userQuestionMetric,
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
   },
   { timestamps: true }
 );
 
-const Feature = mongoose.model<FeatureDoc>('Features', featureSchema);
+const Feature = mongoose.model<FeatureDoc>('Feature', featureSchema);
 
 export default Feature;

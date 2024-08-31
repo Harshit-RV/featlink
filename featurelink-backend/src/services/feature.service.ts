@@ -1,21 +1,46 @@
-import Feature, { FeatureDoc, FeatureType, FeatureImplementationStatus } from "../models/Feature";
+import mongoose from "mongoose";
+import Feature, { FeatureDoc, FeatureType, FeatureImplementationStatus, UserReviewMetric, UserQuestionMetric } from "../models/Feature";
 
 /**
  * Create a new feature
  * @param args - Feature properties
  * @returns The created feature document
  */
-export const createNewFeature = async (args: Partial<FeatureDoc>): Promise<FeatureDoc> => {
-  const newFeature = new Feature(args);
-  return newFeature.save();
+export const createFeature = async (data: {
+  publisher: mongoose.Schema.Types.ObjectId;
+  title: string;
+  description: string;
+  type: FeatureType;
+  imageUrl?: string;
+  implementationStatus: FeatureImplementationStatus;
+  upvotes: UserReviewMetric;
+  downvotes: UserReviewMetric;
+  usefulness: UserQuestionMetric;
+  productId?: mongoose.Schema.Types.ObjectId;
+}) => {
+  const feature = new Feature({
+    publisher: data.publisher,
+    title: data.title,
+    description: data.description,
+    type: data.type,
+    imageUrl: data.imageUrl,
+    implementationStatus: data.implementationStatus,
+    upvotes: data.upvotes,
+    downvotes: data.downvotes,
+    usefulness: data.usefulness,
+    productId: data.productId,
+  });
+
+  return feature.save();
 };
+
 
 /**
  * Get all features
  * @returns An array of all feature documents
  */
 export const getAllFeatures = async (): Promise<FeatureDoc[]> => {
-  return Feature.find({});
+  return Feature.find({}).sort({ createdAt: -1 });
 };
 
 /**
@@ -33,7 +58,11 @@ export const getFeatureById = async (id: string): Promise<FeatureDoc | null> => 
  * @returns An array of feature documents for the given publisher
  */
 export const getFeaturesByPublisher = async (publisher: string): Promise<FeatureDoc[]> => {
-  return Feature.find({ publisher });
+  return Feature.find({ publisher }).sort({ createdAt: -1 });
+};
+
+export const getFeaturesByProductId = async (productId: string): Promise<FeatureDoc[]> => {
+  return Feature.find({ productId }).sort({ createdAt: -1 });
 };
 
 /**

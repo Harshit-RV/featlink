@@ -1,13 +1,44 @@
-import React, { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useOutsideClick } from "@/hooks/useOutsideClick";
+import { useOutsideClick } from "../hooks/useOutsideClick";
+import { FeatureDoc } from "@/types/features.types";
+import { BiUpvote, BiDownvote, BiSolidDownvote, BiSolidUpvote } from "react-icons/bi";
+import { addVoteToFeature } from "@/utils/features.utils";
+import { getUserByAddress } from "@/utils/user.utils";
+// Function to generate a random color
+const getRandomColor = () => {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 
-export function ExpandableCardDemo() {
+// Function to generate a random gradient
+const getRandomGradient = () => {
+  const color1 = getRandomColor();
+  const color2 = getRandomColor();
+  return `linear-gradient(135deg, ${color1}, ${color2})`;
+};
+
+export function ExpandableCardDemo({ cards, walletAddress, refetchFeatures }: { cards: FeatureDoc[], walletAddress: string, refetchFeatures: () => void }) {
   const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
     null
   );
+  const [ userId, setUserId ] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
+
+  const getUserId = async () => {
+    const user = await getUserByAddress(walletAddress)
+    if (user == null) return;
+    setUserId(String(user._id))
+  }
+
+  useEffect(() => {
+    getUserId();
+  }, [])
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -27,6 +58,21 @@ export function ExpandableCardDemo() {
   }, [active]);
 
   useOutsideClick(ref, () => setActive(null));
+
+  const upvote = async (featureId : string) => {
+    console.log("upvoting")
+    await addVoteToFeature(featureId, true);
+    setActive(null);
+    refetchFeatures();
+  };
+
+
+  const downvote = async (featureId: string) => {
+    console.log("down")
+    await addVoteToFeature(featureId, false);
+    setActive(null);
+    refetchFeatures();
+  };
 
   return (
     <>
@@ -66,18 +112,13 @@ export function ExpandableCardDemo() {
             <motion.div
               layoutId={`card-${active.title}-${id}`}
               ref={ref}
-              className="w-full max-w-[500px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
+              className="w-full max-w-[500px] h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
             >
-              <motion.div layoutId={`img-${active.title}-${id}`}>
-                <img
-                  width={200}
-                  height={200}
-                  src={active.src}
-                  alt={active.title}
-                  className="w-full h-80 lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg object-cover object-top"
-                />
-              </motion.div>
-
+              <motion.div
+                layoutId={`img-${active.title}-${id}`}
+                style={{ background: getRandomGradient(), height: "80px" }}
+                className="w-full h-80 lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg"
+              />
               <div>
                 <div className="flex justify-between items-start p-4">
                   <div className="">
@@ -91,17 +132,28 @@ export function ExpandableCardDemo() {
                       layoutId={`description-${active.description}-${id}`}
                       className="text-neutral-600 dark:text-neutral-400"
                     >
-                      {active.description}
+                      {String(active.type)}
                     </motion.p>
                   </div>
 
                   <motion.a
                     layoutId={`button-${active.title}-${id}`}
-                    href={active.ctaLink}
+                    href={active.imageUrl}
                     target="_blank"
-                    className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white"
+                    className="px-4 flex gap-1 py-3 text-sm rounded-full font-bold"
                   >
-                    {active.ctaText}
+                    {
+                      active.upvotes.list.includes(String(userId))  
+                      ? <BiSolidUpvote size={25} className="text-green-500"/> 
+                      : <BiUpvote size={25} className="text-green-500" onClick={() => upvote(String(active._id))}/>
+                    }
+                    <p className="text-lg mr-2">{active.upvotes.count}</p>
+                    {
+                      active.downvotes.list.includes(String(userId)) 
+                      ? <BiSolidDownvote size={25} className="text-red-500"/> 
+                      : <BiDownvote size={25} className="text-red-500" onClick={() => downvote(String(active._id))}/>
+                    }
+                    <p className="text-lg">{active.downvotes.count}</p>
                   </motion.a>
                 </div>
                 <div className="pt-4 relative px-4">
@@ -110,11 +162,9 @@ export function ExpandableCardDemo() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400  [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
+                    className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
                   >
-                    {typeof active.content === "function"
-                      ? active.content()
-                      : active.content}
+                    <p> {String(active.description)}</p>
                   </motion.div>
                 </div>
               </div>
@@ -123,7 +173,7 @@ export function ExpandableCardDemo() {
         ) : null}
       </AnimatePresence>
       <ul className="max-w-2xl mx-auto w-full gap-4">
-        {cards.map((card, index) => (
+        {cards.map((card) => (
           <motion.div
             layoutId={`card-${card.title}-${id}`}
             key={`card-${card.title}-${id}`}
@@ -131,15 +181,11 @@ export function ExpandableCardDemo() {
             className="p-4 flex flex-col md:flex-row justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
           >
             <div className="flex gap-4 flex-col md:flex-row ">
-              <motion.div layoutId={`img-${card.title}-${id}`}>
-                <img
-                  width={100}
-                  height={100}
-                  src={card.src}
-                  alt={card.title}
-                  className="h-40 w-40 md:h-14 md:w-14 rounded-lg object-cover object-top"
-                />
-              </motion.div>
+              <motion.div
+                layoutId={`img-${card.title}-${id}`}
+                style={{ background: getRandomGradient(), width: "56px", height: "56px" }}
+                className="h-40 w-40 md:h-14 md:w-14 rounded-lg"
+              />
               <div className="">
                 <motion.h3
                   layoutId={`title-${card.title}-${id}`}
@@ -149,9 +195,9 @@ export function ExpandableCardDemo() {
                 </motion.h3>
                 <motion.p
                   layoutId={`description-${card.description}-${id}`}
-                  className="text-neutral-600 dark:text-neutral-400 text-center md:text-left"
+                  className="text-neutral-600 mt-2 flex dark:text-neutral-400 text-center md:text-left items-center"
                 >
-                  {card.description}
+                  <p className="bg-red-100 px-1 mr-2 text-sm">{String(card.type)}</p> <p className="bg-green-100 px-1 mr-2 text-sm">{String(card.implementationStatus)}</p> {card.description.slice(0, 30)}
                 </motion.p>
               </div>
             </div>
@@ -159,7 +205,7 @@ export function ExpandableCardDemo() {
               layoutId={`button-${card.title}-${id}`}
               className="px-4 py-2 text-sm rounded-full font-bold bg-gray-100 hover:bg-green-500 hover:text-white text-black mt-4 md:mt-0"
             >
-              {card.ctaText}
+              View
             </motion.button>
           </motion.div>
         ))}
@@ -200,131 +246,3 @@ export const CloseIcon = () => {
     </motion.svg>
   );
 };
-
-const cards = [
-  {
-    description: "Lana Del Rey",
-    title: "Summertime Sadness",
-    src: "https://assets.aceternity.com/demos/lana-del-rey.jpeg",
-    ctaText: "Play",
-    ctaLink: "https://ui.aceternity.com/templates",
-    content: () => {
-      return (
-        <>
-          <p>
-            Lana Del Rey, an iconic American singer-songwriter, is celebrated for
-            her melancholic and cinematic music style. Born Elizabeth Woolridge
-            Grant in New York City, she has captivated audiences worldwide with
-            her haunting voice and introspective lyrics. <br /> <br /> Her songs
-            often explore themes of tragic romance, glamour, and melancholia,
-            drawing inspiration from both contemporary and vintage pop culture.
-            With a career that has seen numerous critically acclaimed albums, Lana
-            Del Rey has established herself as a unique and influential figure in
-            the music industry, earning a dedicated fan base and numerous
-            Lana Del Rey, an iconic American singer-songwriter, is celebrated for
-            her melancholic and cinematic music style. Born Elizabeth Woolridge
-            Grant in New York City, she has captivated audiences worldwide with
-            her haunting voice and introspective lyrics. <br /> <br /> Her songs
-            often explore themes of tragic romance, glamour, and melancholia,
-            drawing inspiration from both contemporary and vintage pop culture.
-            With a career that has seen numerous critically acclaimed albums, Lana
-            Del Rey has established herself as a unique and influential figure in
-            the music industry, earning a dedicated fan base and numerous
-            accolades.
-          </p>
-          <div>
-            What is your favourite way to interact
-          </div>
-        </>
-      );
-    },
-  },
-  {
-    description: "Babbu Maan",
-    title: "Mitran Di Chhatri",
-    src: "https://assets.aceternity.com/demos/babbu-maan.jpeg",
-    ctaText: "Play",
-    ctaLink: "https://ui.aceternity.com/templates",
-    content: () => {
-      return (
-        <p>
-          Babu Maan, a legendary Punjabi singer, is renowned for his soulful
-          voice and profound lyrics that resonate deeply with his audience. Born
-          in the village of Khant Maanpur in Punjab, India, he has become a
-          cultural icon in the Punjabi music industry. <br /> <br /> His songs
-          often reflect the struggles and triumphs of everyday life, capturing
-          the essence of Punjabi culture and traditions. With a career spanning
-          over two decades, Babu Maan has released numerous hit albums and
-          singles that have garnered him a massive fan following both in India
-          and abroad.
-        </p>
-      );
-    },
-  },
-
-  {
-    description: "Metallica",
-    title: "For Whom The Bell Tolls",
-    src: "https://assets.aceternity.com/demos/metallica.jpeg",
-    ctaText: "Play",
-    ctaLink: "https://ui.aceternity.com/templates",
-    content: () => {
-      return (
-        <p>
-          Metallica, an iconic American heavy metal band, is renowned for their
-          powerful sound and intense performances that resonate deeply with
-          their audience. Formed in Los Angeles, California, they have become a
-          cultural icon in the heavy metal music industry. <br /> <br /> Their
-          songs often reflect themes of aggression, social issues, and personal
-          struggles, capturing the essence of the heavy metal genre. With a
-          career spanning over four decades, Metallica has released numerous hit
-          albums and singles that have garnered them a massive fan following
-          both in the United States and abroad.
-        </p>
-      );
-    },
-  },
-  {
-    description: "Led Zeppelin",
-    title: "Stairway To Heaven",
-    src: "https://assets.aceternity.com/demos/led-zeppelin.jpeg",
-    ctaText: "Play",
-    ctaLink: "https://ui.aceternity.com/templates",
-    content: () => {
-      return (
-        <p>
-          Led Zeppelin, a legendary British rock band, is renowned for their
-          innovative sound and profound impact on the music industry. Formed in
-          London in 1968, they have become a cultural icon in the rock music
-          world. <br /> <br /> Their songs often reflect a blend of blues, hard
-          rock, and folk music, capturing the essence of the 1970s rock era.
-          With a career spanning over a decade, Led Zeppelin has released
-          numerous hit albums and singles that have garnered them a massive fan
-          following both in the United Kingdom and abroad.
-        </p>
-      );
-    },
-  },
-  {
-    description: "Mustafa Zahid",
-    title: "Toh Phir Aao",
-    src: "https://assets.aceternity.com/demos/toh-phir-aao.jpeg",
-    ctaText: "Play",
-    ctaLink: "https://ui.aceternity.com/templates",
-    content: () => {
-      return (
-        <p>
-          &quot;Aawarapan&quot;, a Bollywood movie starring Emraan Hashmi, is
-          renowned for its intense storyline and powerful performances. Directed
-          by Mohit Suri, the film has become a significant work in the Indian
-          film industry. <br /> <br /> The movie explores themes of love,
-          redemption, and sacrifice, capturing the essence of human emotions and
-          relationships. With a gripping narrative and memorable music,
-          &quot;Aawarapan&quot; has garnered a massive fan following both in
-          India and abroad, solidifying Emraan Hashmi&apos;s status as a
-          versatile actor.
-        </p>
-      );
-    },
-  },
-];
