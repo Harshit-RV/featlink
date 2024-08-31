@@ -54,7 +54,7 @@ export const AppBar = () => {
         <div className="sm:flex h-full hidden ml-10">
           <NavBarItem pathname={location.pathname} link="/explore" title="Explore" />
           <NavBarItem pathname={location.pathname} link="/my-requests" title="My Feat Requests" />
-          <NavBarItem2 pathname={location.pathname} link="/founder" title="Founders' View" />
+          <NavBarItem2 pathname={location.pathname} link="/founder" title="Founder's View" />
         </div>
         </div>
         <div className="h-full flex items-center gap-3">

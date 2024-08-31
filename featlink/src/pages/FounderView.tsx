@@ -12,15 +12,6 @@ import {
 import { FeatureImplementationStatus, UserQuestionMetric } from "@/types/features.types";
 import { BiSolidDownvote, BiSolidUpvote } from "react-icons/bi";
 import { useParams } from "react-router-dom";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { updateUserFeatCoinBalance } from "@/utils/user.utils";
 
@@ -40,17 +31,17 @@ export const FounderView = () => {
   } = useQuery(`feature-requests`, fetchFeatureRequests);
 
 
-  const getUsefulnessText = (usefulness: UserQuestionMetric) => {
+  const getUsefulnessText = (usefulness: UserQuestionMetric) : string[] => {
     const totalResponses =
       usefulness.yes.count + usefulness.no.count + usefulness.maybe.count;
 
-    if (totalResponses === 0) return "No responses yet";
+    if (totalResponses === 0) return [];
 
     const yesPercentage = ((usefulness.yes.count / totalResponses) * 100).toFixed(1);
     const noPercentage = ((usefulness.no.count / totalResponses) * 100).toFixed(1);
     const maybePercentage = ((usefulness.maybe.count / totalResponses) * 100).toFixed(1);
 
-    return `Yes: ${yesPercentage}%, No: ${noPercentage}%, Maybe: ${maybePercentage}%`;
+    return [`Yes: ${yesPercentage}%`, `No: ${noPercentage}%`, `Maybe: ${maybePercentage}%`];
   };
 
   const handleStatusChange = async (featureId: string, newStatus: string) => {
@@ -115,7 +106,7 @@ export const FounderView = () => {
                 <TableCell className="py-3 px-5 text-gray-600">{feature.upvotes.count}</TableCell>
                 <TableCell className="py-3 px-5 text-gray-600">{feature.downvotes.count}</TableCell>
                 <TableCell className="py-3 px-4 text-gray-600">
-                  {getUsefulnessText(feature.usefulness)}
+                  {getUsefulnessText(feature.usefulness).map((text, index) => <p key={index}>{text}</p>)}
                 </TableCell>
                 <TableCell className="py-3 px-4 text-gray-600">{new Date(feature.createdAt).toLocaleDateString()}</TableCell>
                 <TableCell className="py-3 px-4 text-gray-600">

@@ -1,9 +1,11 @@
+
+
 import { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 import { FeatureDoc } from "@/types/features.types";
 import { BiUpvote, BiDownvote, BiSolidDownvote, BiSolidUpvote } from "react-icons/bi";
-import { addVoteToFeature } from "@/utils/features.utils";
+import { addVoteToFeature, updateUsefulnessMetric } from "@/utils/features.utils";
 import { getUserByAddress } from "@/utils/user.utils";
 // Function to generate a random color
 const getRandomColor = () => {
@@ -73,6 +75,13 @@ export function ExpandableCardDemo({ cards, walletAddress, refetchFeatures }: { 
     setActive(null);
     refetchFeatures();
   };
+
+  const handleFeedback = async (featureId: string, feedback: 'yes' | 'no' | 'maybe') => {
+    console.log("feedback")
+    await updateUsefulnessMetric(featureId, feedback);
+    setActive(null);
+    refetchFeatures();
+  }
 
   return (
     <>
@@ -167,6 +176,32 @@ export function ExpandableCardDemo({ cards, walletAddress, refetchFeatures }: { 
                     <p> {String(active.description)}</p>
                   </motion.div>
                 </div>
+
+                <div className="p-4">
+                    <p className="font-semibold">This feature will enhance my experience working with the app:</p>
+                    <div className="flex gap-4 mt-2 text-sm">
+                      <button
+                        className={`px-4 py-2 rounded-full ${active.usefulness.yes.list.includes(userId ?? '') ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+                        onClick={() => handleFeedback(String(active._id), 'yes')}
+                      >
+                        Yes
+                      </button>
+                      <button
+                        className={`px-4 py-2 rounded-full ${active.usefulness.maybe.list.includes(userId ?? '') ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+                        onClick={() => handleFeedback(String(active._id), 'maybe')}
+                      >
+                        Maybe
+                      </button>
+                      <button
+                          className={`px-4 py-2 rounded-full ${active.usefulness.no.list.includes(userId ?? '') ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+
+                        onClick={() => handleFeedback(String(active._id), 'no')}
+                      >
+                        No
+                      </button>
+                    </div>
+                    </div>
+
               </div>
             </motion.div>
           </div>
