@@ -3,8 +3,12 @@ import { getFeaturesByPublisher } from "@/utils/features.utils";
 import { useQuery } from "react-query";
 import { getUserByAddress } from "@/utils/user.utils";
 import { ExpandableCardDemo } from "@/components/ExpandableCard";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const MyFeatRequests = () => {
+  const navigate  = useNavigate();
     
     const fetchFeatureRequests = async () => {
         const address = await localStorage.getItem('walletAddress');
@@ -19,6 +23,13 @@ export const MyFeatRequests = () => {
       
     const { data: featureRequests, isLoading: featureRequestLoading, refetch: refetchFeatureRequests } = useQuery(`my-feature-requests` , fetchFeatureRequests);
     
+    useEffect(() => {
+      const address = localStorage.getItem('walletAddress');
+      if (!address) {
+        toast.error('Please connect your wallet');
+        navigate('/');
+      }
+    },[]);
 
   return (
     <div className="h-screen flex-col flex items-center bg-gray-50">

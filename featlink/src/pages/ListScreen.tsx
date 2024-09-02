@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/sheet"
 import { createProduct, getAllProducts } from "@/utils/products.utils";
 import { fetchUserId } from "@/utils/user.utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useQuery } from 'react-query'
 import { useNavigate } from "react-router-dom";
 
@@ -40,6 +41,17 @@ export const ListScreen = ({ isFounder = false } : { isFounder: boolean }) => {
       console.error('Error creating product:', error);
     }
   }
+
+  useEffect(() => {
+    if (isFounder) {
+      return;
+    }
+    const address = localStorage.getItem('walletAddress');
+    if (!address) {
+      toast.error('Please connect your wallet');
+      navigate('/');
+    }
+  },[]);
 
   const { data: products, isLoading: productLoading, refetch: refetchProducts } = useQuery('events', fetchProduct);
 

@@ -75,9 +75,6 @@ export const UserLogin = () => {
             <div>FeatLink is a platform that allows you to productively interact with your users in a way that makes your product better for them and everyone else.</div>
             <div>Increase customer satisfaction, increase sales and profit.</div>
           </div>
-          <Button className="w-32 mt-4 bg-primaryGreen hover:bg-primaryGreen/70" onClick={onClick}>
-            { walletStatus == 'Disconnected' ? 'Get Started' : walletStatus == 'Signed' ? "Dashboard" : '...'}
-          </Button>
         </>
         :
         <>
@@ -89,10 +86,21 @@ export const UserLogin = () => {
             <div>FeatLink allows you to share your ideas and feedback to improve the products you use.</div>
             <div>Help shape the future of your favorite products and get rewarded for your contributions.</div>
           </div>
-          <Button className="w-32 mt-4 bg-primaryGreen hover:bg-primaryGreen/70" onClick={onClick}>
-            { walletStatus == 'Disconnected' ? 'Get Started' : walletStatus == 'Signed' ? "Dashboard" : '...'}
-          </Button>
+          
         </> }
+        <div className="flex gap-2">
+            <Button className="w-32 mt-4 bg-primaryGreen hover:bg-primaryGreen/70" onClick={onClick}>
+              { walletStatus == 'Disconnected' ? 'Get Started' : walletStatus == 'Signed' ? "Dashboard" : '...'}
+            </Button>
+            {walletAddress && <Button className="w-32 mt-4 text-primaryGreen bg-white hover:bg-gray-200 border-2 border-primaryGreen/80" 
+              onClick={() => {
+                localStorage.removeItem('walletAddress');
+                window.location.reload();
+              }}
+              >
+              Disconnect
+            </Button>}
+          </div>
 
         <div className="h-10"></div>
       </div>

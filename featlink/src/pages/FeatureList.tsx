@@ -15,17 +15,27 @@ import { Textarea } from "@/components/ui/textarea";
 import { FeatureType } from "@/types/features.types";
 import { createFeature, getFeaturesByProduct } from "@/utils/features.utils";
 import { fetchUserId } from "@/utils/user.utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const FeatureList = () => {
 
   const { productId } = useParams();
+  const navigate = useNavigate();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [type, setType] = useState<FeatureType>('Feature');
+
+  useEffect(() => {
+    const address = localStorage.getItem('walletAddress');
+    if (!address) {
+      toast.error('Please connect your wallet');
+      navigate('/');
+    }
+  },[]);
 
   const handleSubmit = async () => {
     const userId = await fetchUserId();

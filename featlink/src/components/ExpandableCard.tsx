@@ -38,6 +38,7 @@ export function ExpandableCardDemo({ cards, walletAddress, refetchFeatures }: { 
     setUserId(String(user._id))
   }
 
+
   useEffect(() => {
     getUserId();
   }, [])
