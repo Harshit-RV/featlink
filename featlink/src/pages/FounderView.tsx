@@ -59,7 +59,7 @@ export const FounderView = () => {
       <div className="h-16 w-full mb-4">
         <AppBar />
       </div>
-      <div className="py-8 sm:py-12 w-full max-w-6xl bg-white rounded-lg px-10">
+      <div className="py-8 sm:py-12 w-full max-w-6xl bg-white rounded-lg px-2 sm:px-10">
         <div className="flex justify-between items-center mb-6 py-4 border-b border-gray-200">
           <h1 className="font-bold text-3xl text-gray-800">Founder Insights</h1>
         </div>

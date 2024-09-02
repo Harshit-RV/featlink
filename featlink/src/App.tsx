@@ -17,7 +17,7 @@ function App() {
 
           <Routes>
 
-            <Route path="/user" element={ <UserLogin/> }/>
+            <Route path="/" element={ <UserLogin/> }/>
             <Route path="/explore" element={ <ListScreen isFounder={false}/> }/>
             <Route path="/explore/:productId" element={ <FeatureList/> }/>
             <Route path="/my-requests" element={ <MyFeatRequests/> }/>

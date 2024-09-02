@@ -48,68 +48,71 @@ export const ListScreen = ({ isFounder = false } : { isFounder: boolean }) => {
       <div className="h-14 w-full">
         <AppBar/>
       </div>
-        <div className="w-[900px] mt-12 mb-5 flex flex-col gap-3">
-          <div className="flex justify-between items-end pr-4">
-            <h2 className=" flex text-3xl font-bold">Products</h2>
-            {isFounder &&  <Sheet>
-      <SheetTrigger>
-        <Button className='bg-primaryGreen hover:bg-primaryGreen/80 rounded-full px-6'>Add New</Button>
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Create a New Product Listing</SheetTitle>
-          <SheetDescription>
-            Please fill in the details below to create a new product.
-          </SheetDescription>
-        </SheetHeader>
-        <div className="space-y-4 p-4">
-          <Input 
-            placeholder="Name" 
-            value={name} 
-            onChange={(e) => setName(e.target.value)} 
-          />
 
-          <Button 
-            className='bg-primaryGreen hover:bg-primaryGreen/80 rounded-full w-full mt-4' 
-            onClick={handleSubmit}
-          >
-            Submit
-          </Button>
+      <div className="w-full px-4 sm:px-10 lg:px-10 lg:w-[900px] mt-12 mb-5 flex flex-col gap-3">
+        <div className="flex justify-between items-end pr-4">
+          <h2 className=" flex text-3xl font-bold">Products</h2>
+          {isFounder &&  <Sheet>
+              <SheetTrigger>
+                <Button className='bg-primaryGreen hover:bg-primaryGreen/80 rounded-full px-6'>Add New</Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Create a New Product Listing</SheetTitle>
+                  <SheetDescription>
+                    Please fill in the details below to create a new product.
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="space-y-4 p-4">
+                  <Input 
+                    placeholder="Name" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                  />
+
+                  <Button 
+                    className='bg-primaryGreen hover:bg-primaryGreen/80 rounded-full w-full mt-4' 
+                    onClick={handleSubmit}
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>}
         </div>
-      </SheetContent>
-    </Sheet>}
-          </div>
-          {isFounder && <p className="text-[14px] px-1 mt-2">This is what the Founders/company managers see.</p>}
-          <p className="text-[14px] px-1 mt-2">In the future, each company using FeatLink will have its own subdomain. For now, users can select the product they want to contribute to in this section.</p>
-        </div>
-        <div className="grid grid-cols-2 w-[900px] gap-10 mb-10">
-          {
-            productLoading || products == undefined || products == null ? 
-            [1,2].map(() => (<GlowingStarsBackgroundCard 
-              className="bg-green-500"
+        {isFounder && <p className="text-[14px] px-1 mt-2">This is what the Founders/company managers see.</p>}
+        <p className="text-[14px] px-1 mt-2">In the future, each company using FeatLink will have its own subdomain. For now, users can select the product they want to contribute to in this section.</p>
+      </div>
+      <div className="grid sm:grid-cols-2 w-full px-4 sm:px-10 lg:px-10 lg:w-[900px] gap-10 mb-10">
+        {
+          productLoading || products == undefined || products == null ? 
+          [1,2].map(() => (<GlowingStarsBackgroundCard 
+            key={Math.random()}
+            className="bg-green-500"
+              children={
+                <div className="flex flex-col gap-1">
+                  <h2 className="font-bold text-2xl text-white">...</h2>
+                  <p className="text-base text-white">By ..</p>
+                </div>
+              }
+          />))
+          :
+          products.map((product) => (
+            <GlowingStarsBackgroundCard 
+                key={Math.random()}
+                onClick={() => navigate(`${product._id}`)}
+                className="hover:cursor-pointer"
                 children={
                   <div className="flex flex-col gap-1">
-                    <h2 className="font-bold text-2xl text-white">...</h2>
-                    <p className="text-base text-white">By ..</p>
+                    <h2 className="font-bold text-2xl text-white">{product.name}</h2>
+                    <p className="text-base text-white">By {product.founder}</p>
                   </div>
                 }
-            />))
-            :
-            products.map((product) => (
-              <GlowingStarsBackgroundCard 
-                  onClick={() => navigate(`${product._id}`)}
-                  className="hover:cursor-pointer"
-                  children={
-                    <div className="flex flex-col gap-1">
-                      <h2 className="font-bold text-2xl text-white">{product.name}</h2>
-                      <p className="text-base text-white">By {product.founder}</p>
-                    </div>
-                  }
-              />
-            ))
-          }
-
-        </div>
+            />
+          ))
+        }
+        <div></div>
+      </div>
     </div>
   );
 }

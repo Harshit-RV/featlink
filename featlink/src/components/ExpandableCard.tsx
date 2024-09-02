@@ -6,7 +6,7 @@ import { useOutsideClick } from "../hooks/useOutsideClick";
 import { FeatureDoc } from "@/types/features.types";
 import { BiUpvote, BiDownvote, BiSolidDownvote, BiSolidUpvote } from "react-icons/bi";
 import { addVoteToFeature, updateUsefulnessMetric } from "@/utils/features.utils";
-import { getUserByAddress } from "@/utils/user.utils";
+import { getUserByAddress, updateUserFeatCoinBalance } from "@/utils/user.utils";
 // Function to generate a random color
 const getRandomColor = () => {
   const letters = "0123456789ABCDEF";
@@ -66,6 +66,8 @@ export function ExpandableCardDemo({ cards, walletAddress, refetchFeatures }: { 
     await addVoteToFeature(featureId, true);
     setActive(null);
     refetchFeatures();
+    if (userId == null) return;
+    await updateUserFeatCoinBalance(userId, 15);
   };
 
 
@@ -74,6 +76,8 @@ export function ExpandableCardDemo({ cards, walletAddress, refetchFeatures }: { 
     await addVoteToFeature(featureId, false);
     setActive(null);
     refetchFeatures();
+    if (userId == null) return;
+    await updateUserFeatCoinBalance(userId, 15);
   };
 
   const handleFeedback = async (featureId: string, feedback: 'yes' | 'no' | 'maybe') => {
@@ -81,6 +85,8 @@ export function ExpandableCardDemo({ cards, walletAddress, refetchFeatures }: { 
     await updateUsefulnessMetric(featureId, feedback);
     setActive(null);
     refetchFeatures();
+    if (userId == null) return;
+    await updateUserFeatCoinBalance(userId, 30);
   }
 
   return (

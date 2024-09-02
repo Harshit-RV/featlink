@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { UserDoc, NFT } from '../types/user.types';
-
-const API_URL = 'http://localhost:8080';
+import { API_URL } from './backend';
 
 export const fetchUserId = async () => {
   const address = localStorage.getItem('walletAddress');
