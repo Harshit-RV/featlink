@@ -1,8 +1,11 @@
 import { AppBar } from "@/components/AppBar";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { connectWallet, signMessage } from "@/utils/web3";
+import { createUser } from "@/utils/user.utils";
+
 
 type TabState = 'founder' | 'user';
 
@@ -12,51 +15,38 @@ export const UserLogin = () => {
 
   const [ walletAddress, setWalletAddress ] = useState<string | null>(null);
   const [walletStatus, setWalletStatus] = useState<'Disconnected' | 'Connected' | 'Signed'>('Disconnected');
+  
+  useEffect(() => {
+    if (walletAddress && walletStatus === 'Connected') {
+      verifyWalletAndSetStatus(walletAddress);
+    }
+  }, [walletAddress, walletStatus]);
 
-
-  const signMessage = async () => {
-    const { solana } = window;
-
-    if (solana) {
-      const message = "Hello, Solana!";
-      const encodedMessage = new TextEncoder().encode(message);
-
-      const signedMessage = await solana.signMessage(encodedMessage, 'utf8');
-
-      console.log("Signed message:", signedMessage.signature.toString('base64'));
+  useEffect(() => {
+    if (localStorage.getItem('walletAddress')) {
+      setWalletAddress(localStorage.getItem('walletAddress'));
       setWalletStatus('Signed');
-      return;
+    }
+  }, []);
+
+  const verifyWalletAndSetStatus = async (walletAddress : string ) => {
+    const isValid =  await signMessage(walletAddress);
+    if (isValid) {
+      setWalletStatus('Signed');
+      await createUser({ address: walletAddress });
+      localStorage.setItem('walletAddress', walletAddress!);
+      navigate(tabState === 'founder' ? '/founder' : '/explore');
     }
   }
-  
-  const connectWallet = async () => {
-    try {
-      const { solana } = window;
-      if (solana) {
-        if (solana.isPhantom) {
-          const response = await solana.connect({ onlyIfTrusted: false });
-
-          setWalletAddress(response.publicKey.toString());
-          localStorage.setItem('walletAddress', response.publicKey.toString());
-          setWalletStatus('Connected');
-        } else {
-          alert("Please install phantom wallet");
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const onClick = async () => {
-   
-    if (walletStatus === 'Signed') {
-      navigate('/founder');
-    } else {
-      await connectWallet();
-      await signMessage();
-      navigate('/founder');
+    if (walletStatus == 'Signed') {
+      navigate(tabState === 'founder' ? '/founder' : '/explore');
+      return;
     }
+    const response = await connectWallet();
+    await setWalletAddress(response.publicKey.toString());
+    setWalletStatus('Connected');
   }
 
 

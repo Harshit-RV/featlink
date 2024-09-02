@@ -82,7 +82,7 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
     const feature = await getFeatureById(id);
     if (!feature) {
-      return res.status(404).json({ message: 'Feature not found' });
+      return res.status(400).json({ message: 'Feature not found' });
     }
     return res.status(200).json(feature);
   } catch (err) {
@@ -126,7 +126,7 @@ router.put('/status/:id', async (req, res) => {
 
     const updatedFeature = await updateFeatureStatus(id, status);
     if (!updatedFeature) {
-      return res.status(404).json({ message: 'Feature not found' });
+      return res.status(400).json({ message: 'Feature not found' });
     }
 
     return res.status(200).json(updatedFeature);
@@ -159,7 +159,7 @@ router.post('/vote/:id', async (req, res) => {
 
     const updatedFeature = await addVoteToFeature(id, isUpvote, String(userId));
     if (!updatedFeature) {
-      return res.status(404).json({ message: 'Feature not found' });
+      return res.status(400).json({ message: 'Feature not found' });
     }
 
     return res.status(200).json(updatedFeature);
@@ -196,7 +196,7 @@ router.post('/usefulness/:id', async (req, res) => {
 
     const updatedFeature = await updateUsefulnessMetric(id, feedback, String(userId));
     if (!updatedFeature) {
-      return res.status(404).json({ message: 'Feature not found' });
+      return res.status(400).json({ message: 'Feature not found' });
     }
 
     return res.status(200).json(updatedFeature);
@@ -228,7 +228,7 @@ router.delete('/:id', async (req, res) => {
 
     const feature = await getFeatureById(id);
     if (!feature) {
-      return res.status(404).json({ message: 'Feature not found' });
+      return res.status(400).json({ message: 'Feature not found' });
     }
 
     if (feature.publisher !== userId) {

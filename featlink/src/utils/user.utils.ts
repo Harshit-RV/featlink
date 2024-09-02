@@ -14,10 +14,6 @@ export const createUser = async (data: Partial<UserDoc>): Promise<UserDoc> => {
   const res = await axios.post(`${API_URL}/users/create`,{
     name: data.name,
     address: data.address,
-  },{
-      headers: {
-          Authorization: `Bearer ${localStorage.getItem('walletAddress')}`
-      }
   })
   console.log(res.data);
   return res.data;

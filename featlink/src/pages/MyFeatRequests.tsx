@@ -17,7 +17,7 @@ export const MyFeatRequests = () => {
       }
 
       
-    const { data: featureRequests, isLoading: featureRequestLoading, refetch: refetchFeatureRequests } = useQuery(`feature-requests` , fetchFeatureRequests);
+    const { data: featureRequests, isLoading: featureRequestLoading, refetch: refetchFeatureRequests } = useQuery(`my-feature-requests` , fetchFeatureRequests);
     
 
   return (
@@ -32,6 +32,10 @@ export const MyFeatRequests = () => {
         </div>
        
         <div className="bg-gray-200 my-3 h-0.5 rounded-full w-full"></div>
+
+        {
+          featureRequests != undefined && featureRequests.length == 0 ? <div className="text-center mt-10 text-2xl font-bold text-gray-400/70">You have not created any feature requests</div> : null
+        }
         
         {
           featureRequestLoading || featureRequests == undefined 

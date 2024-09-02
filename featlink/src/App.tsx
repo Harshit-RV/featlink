@@ -7,6 +7,7 @@ import { ListScreen } from './pages/ListScreen'
 import { MyFeatRequests } from './pages/MyFeatRequests'
 import { FeatureList } from './pages/FeatureList'
 import { FounderView } from './pages/FounderView'
+import  { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <div className='flex flex-col'>
         
           {/* <AppBar/> */}
+          <Toaster />
 
           <Routes>
 

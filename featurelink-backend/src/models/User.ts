@@ -7,7 +7,7 @@ export interface NFT {
 }
 
 export interface UserDoc extends Document {
-  name: string;
+  name: string | null;
   address: string;
   featCoinBalance: number;
   latestDailyClaimDate: Date;
@@ -27,7 +27,7 @@ const nftSchema: Schema = new Schema(
 
 const userSchema: Schema = new Schema(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: false },
     address: { type: String, required: true, unique: true },
     featCoinBalance: { type: Number, required: true, default: 0 },
     latestDailyClaimDate: { type: Date, required: true, default: Date.now },

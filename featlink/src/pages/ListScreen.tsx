@@ -81,7 +81,9 @@ export const ListScreen = ({ isFounder = false } : { isFounder: boolean }) => {
             </Sheet>}
         </div>
         {isFounder && <p className="text-[14px] px-1 mt-2">This is what the Founders/company managers see.</p>}
-        <p className="text-[14px] px-1 mt-2">In the future, each company using FeatLink will have its own subdomain. For now, users can select the product they want to contribute to in this section.</p>
+        {isFounder 
+        ? <p className="text-md px-1 mt-2">In the future, only your products will be listed here. For now, you can browse responses to all products to check how FeatLink works.</p>
+        : <p className="text-[14px] px-1 mt-2">In the future, each company using FeatLink will have its own subdomain. For now, users can select the product they want to contribute to in this section.</p>}
       </div>
       <div className="grid sm:grid-cols-2 w-full px-4 sm:px-10 lg:px-10 lg:w-[900px] gap-10 mb-10">
         {

@@ -39,7 +39,7 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
     const product = await getProductById(id);
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(400).json({ message: 'Product not found' });
     }
     return res.status(200).json(product);
   } catch (err) {
@@ -54,7 +54,7 @@ router.get('/name/:name', async (req, res) => {
     const { name } = req.params;
     const product = await getProductByName(name);
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(400).json({ message: 'Product not found' });
     }
     return res.status(200).json(product);
   } catch (err) {
@@ -71,7 +71,7 @@ router.put('/:id', async (req, res) => {
 
     const updatedProduct = await updateProduct(id, updateData);
     if (!updatedProduct) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(400).json({ message: 'Product not found' });
     }
 
     return res.status(200).json(updatedProduct);
@@ -87,7 +87,7 @@ router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     const deletedProduct = await deleteProduct(id);
     if (!deletedProduct) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(400).json({ message: 'Product not found' });
     }
     return res.status(200).json(deletedProduct);
   } catch (err) {

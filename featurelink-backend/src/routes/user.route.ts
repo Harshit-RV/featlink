@@ -24,7 +24,7 @@ router.post('/create', async (req, res) => {
       address, 
       featCoinBalance: 0, 
       latestDailyClaimDate: new Date(), 
-      nfts: [], 
+      nfts: [],
     });
     return res.status(201).json(newUser);
   } catch (err) {
@@ -50,7 +50,7 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
     const user = await getUserById(id);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(400).json({ message: 'User not found' });
     }
     return res.status(200).json(user);
   } catch (err) {
@@ -65,7 +65,7 @@ router.get('/address/:address', async (req, res) => {
     const { address } = req.params;
     const user = await getUserByAddress(address);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(400).json({ message: 'User not found' });
     }
     return res.status(200).json(user);
   } catch (err) {
@@ -83,7 +83,7 @@ router.put('/featcoin/:id', async (req, res) => {
     const user = await getUserById(id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(400).json({ message: 'User not found' });
     }
     const response = await mintFeatCoinToAddress(user.address, amount);
 
@@ -94,7 +94,7 @@ router.put('/featcoin/:id', async (req, res) => {
 
     const updatedUser = await updateUserFeatCoinBalance(id, amount);
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(400).json({ message: 'User not found' });
     }
 
     return res.status(200).json(updatedUser);
@@ -111,7 +111,7 @@ router.put('/daily-claim/:id', async (req, res) => {
 
     const updatedUser = await updateUserDailyClaimDate(id);
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(400).json({ message: 'User not found' });
     }
 
     return res.status(200).json(updatedUser);
@@ -129,7 +129,7 @@ router.post('/nft/:id', async (req, res) => {
 
     const updatedUser = await addOrUpdateUserNFT(id, nft);
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(400).json({ message: 'User not found' });
     }
 
     return res.status(200).json(updatedUser);
@@ -146,7 +146,7 @@ router.delete('/nft/:id/:nftAddress', async (req, res) => {
 
     const updatedUser = await removeUserNFT(id, nftAddress);
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(400).json({ message: 'User not found' });
     }
 
     return res.status(200).json(updatedUser);
@@ -162,7 +162,7 @@ router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     const deletedUser = await deleteUser(id);
     if (!deletedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(400).json({ message: 'User not found' });
     }
     return res.status(200).json(deletedUser);
   } catch (err) {
