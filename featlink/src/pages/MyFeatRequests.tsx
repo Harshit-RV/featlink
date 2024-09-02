@@ -32,8 +32,11 @@ export const MyFeatRequests = () => {
         </div>
        
         <div className="bg-gray-200 my-3 h-0.5 rounded-full w-full"></div>
+        
         {
-          featureRequestLoading || featureRequests == undefined ? <div>Loading...</div> : <ExpandableCardDemo refetchFeatures={refetchFeatureRequests} walletAddress={localStorage.getItem('walletAddress')!} cards={featureRequests}/>
+          featureRequestLoading || featureRequests == undefined 
+            ? <div className="text-center mt-10 text-2xl font-bold text-gray-400/70">Loading...</div> 
+            : <ExpandableCardDemo refetchFeatures={refetchFeatureRequests} walletAddress={localStorage.getItem('walletAddress')!} cards={featureRequests}/>
         }
      
         

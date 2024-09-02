@@ -21,10 +21,6 @@ app.use('/features', featureRoutes);
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
 
-// Routes
-// app.use('/', homeRoutes);
-// app.use('/monitor', monitorRoutes);
-// app.use('/timer', timerRoutes);
 
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack);

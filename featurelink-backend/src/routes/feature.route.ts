@@ -15,7 +15,6 @@ import mongoose from 'mongoose';
 import { getUserIdByAddress } from '../services/user.service';
 
 const router = express.Router();
-// const userId = '12345'; // Mock user ID
 
 
 // Route to create a new feature

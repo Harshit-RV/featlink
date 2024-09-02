@@ -88,32 +88,31 @@ export const FounderView = () => {
                 
                 featureRequests.map((feature) => (
                   <TableRow key={String(feature._id)} className="border-b border-gray-200 hover:bg-gray-50">
-                <TableCell className="py-3 px-4 text-gray-800">{feature.title}</TableCell>
-                <TableCell className="py-3 px-4 text-gray-600">{feature.type}</TableCell>
-                <TableCell className="py-3 px-4 text-gray-600">
-                  <select
-                    value={feature.implementationStatus}
-                    onChange={(e) => handleStatusChange(String(feature._id), e.target.value)}
-                    className="border rounded px-2 py-1"
-                  >
-                    <option value="Not Reviewed">Not Reviewed</option>
-                    <option value="Not Considering">Not Considering</option>
-                    <option value="Considering">Considering</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                  </select>
-                </TableCell>
-                <TableCell className="py-3 px-5 text-gray-600">{feature.upvotes.count}</TableCell>
-                <TableCell className="py-3 px-5 text-gray-600">{feature.downvotes.count}</TableCell>
-                <TableCell className="py-3 px-4 text-gray-600">
-                  {getUsefulnessText(feature.usefulness).map((text, index) => <p key={index}>{text}</p>)}
-                </TableCell>
-                <TableCell className="py-3 px-4 text-gray-600">{new Date(feature.createdAt).toLocaleDateString()}</TableCell>
-                <TableCell className="py-3 px-4 text-gray-600">
-                  <Button onClick={() => sendReward(String(feature.publisher))} className='bg-primaryGreen hover:bg-primaryGreen/80 rounded-full  h-6'>Reward</Button>
-                </TableCell>
-              </TableRow>
-                 
+                    <TableCell className="py-3 px-4 text-gray-800">{feature.title}</TableCell>
+                    <TableCell className="py-3 px-4 text-gray-600">{feature.type}</TableCell>
+                    <TableCell className="py-3 px-4 text-gray-600">
+                      <select
+                        value={feature.implementationStatus}
+                        onChange={(e) => handleStatusChange(String(feature._id), e.target.value)}
+                        className="border rounded px-2 py-1"
+                      >
+                        <option value="Not Reviewed">Not Reviewed</option>
+                        <option value="Not Considering">Not Considering</option>
+                        <option value="Considering">Considering</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                      </select>
+                    </TableCell>
+                    <TableCell className="py-3 px-5 text-gray-600">{feature.upvotes.count}</TableCell>
+                    <TableCell className="py-3 px-5 text-gray-600">{feature.downvotes.count}</TableCell>
+                    <TableCell className="py-3 px-4 text-gray-600">
+                      {getUsefulnessText(feature.usefulness).map((text, index) => <p key={index}>{text}</p>)}
+                    </TableCell>
+                    <TableCell className="py-3 px-4 text-gray-600">{new Date(feature.createdAt).toLocaleDateString()}</TableCell>
+                    <TableCell className="py-3 px-4 text-gray-600">
+                      <Button onClick={() => sendReward(String(feature.publisher))} className='bg-primaryGreen hover:bg-primaryGreen/80 rounded-full  h-6'>Reward</Button>
+                    </TableCell>
+                  </TableRow>
                 ))
               )}
             </TableBody>

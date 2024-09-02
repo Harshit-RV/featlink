@@ -119,7 +119,9 @@ export const FeatureList = () => {
         }
 
         {
-          featureLoading || features == undefined ? <div>Loading...</div> : <ExpandableCardDemo refetchFeatures={refetchFeatures} walletAddress={localStorage.getItem('walletAddress')!} cards={features}/>
+          featureLoading || features == undefined 
+            ? <div className="text-center mt-10 text-2xl font-bold text-gray-400/70">Loading...</div>
+            : <ExpandableCardDemo refetchFeatures={refetchFeatures} walletAddress={localStorage.getItem('walletAddress')!} cards={features}/>
         }
      
         
