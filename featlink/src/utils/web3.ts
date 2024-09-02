@@ -28,7 +28,8 @@ export const verifyMessage = async (props: VerifyMessageProps) => {
 };
 
 export const signMessage = async (walletAddress: string): Promise<boolean> => {
-  const { solana } = window;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const solana = (window as any).solana;
 
   if (solana) {
     try {
@@ -58,7 +59,9 @@ export const signMessage = async (walletAddress: string): Promise<boolean> => {
 
 export const connectWallet = async () => {
   try {
-    const { solana } = window;
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const solana = (window as any).solana;
+  
     if (solana) {
       if (solana.isPhantom) {
         return await solana.connect({ onlyIfTrusted: false });

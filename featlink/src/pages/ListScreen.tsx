@@ -102,7 +102,8 @@ export const ListScreen = ({ isFounder = false } : { isFounder: boolean }) => {
           products.map((product) => (
             <GlowingStarsBackgroundCard 
                 key={Math.random()}
-                onClick={() => navigate(`${product._id}`)}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                onClick={() => navigate(`${(product as unknown as any)._id}`)}
                 className="hover:cursor-pointer"
                 children={
                   <div className="flex flex-col gap-1">
