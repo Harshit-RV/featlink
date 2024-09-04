@@ -3,7 +3,7 @@ import { ProductDoc } from "@/types/products.types";
 import { UserDoc } from "@/types/user.types";
 import axios from 'axios';
 
-export const API_URL = 'http://localhost:8080';
+export const API_URL = 'https://featlink-be.onrender.com';
 
 // export const createFeature = async (data: UserDoc): Promise<UserDoc> => {
 //   const res = await axios.post('https://wt-server.onrender.com/monitor/list', {

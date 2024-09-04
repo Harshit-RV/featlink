@@ -72,7 +72,7 @@ export const AppBar = () => {
           <h1 onClick={() => navigate('/')} className="cursor-pointer text-primaryGreen ml-3 font-bold text-xl w-full flex items-center">FeatLink</h1>
           
           <div className="sm:flex h-full hidden ml-10">
-            <NavBarItem pathname={location.pathname} link="/demo" title="Demo" />
+            <NavBarItem pathname={location.pathname} link="https://plutofy.live/" title="Demo" />
             <NavBarItem pathname={location.pathname} link="/explore" title="Explore" />
             <NavBarItem pathname={location.pathname} link="/my-requests" title="My Feat Requests" />
             <NavBarItem2 pathname={location.pathname} link="/founder" title="Founder's View" />
