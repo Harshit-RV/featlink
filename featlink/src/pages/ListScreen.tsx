@@ -57,7 +57,7 @@ export const ListScreen = ({ isFounder = false } : { isFounder: boolean }) => {
 
   return (
     <div className="h-screen flex-col flex items-center bg-gray-50">
-      <div className="h-14 w-full">
+      <div className="w-full">
         <AppBar/>
       </div>
 

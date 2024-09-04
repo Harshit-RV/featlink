@@ -34,7 +34,7 @@ export const MyFeatRequests = () => {
   return (
     <div className="h-screen flex-col flex items-center bg-gray-50">
       
-      <div className="h-14 w-full">
+      <div className="w-full">
         <AppBar/>
       </div>
       <div className=" mt-9 w-full max-w-[640px]">

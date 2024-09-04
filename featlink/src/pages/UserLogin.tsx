@@ -52,7 +52,7 @@ export const UserLogin = () => {
 
   return (
     <div className="h-screen flex-col flex justify-between items-center bg-gray-100">
-      <div className="h-14 w-full">
+      <div className="w-full">
         <AppBar/>
       </div>
       <div className="w-full px-4 sm:px-10 lg:w-[1000px] h-full flex flex-col gap-4 justify-center ">

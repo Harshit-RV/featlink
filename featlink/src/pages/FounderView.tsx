@@ -102,7 +102,7 @@ export const FounderView = () => {
 
   return (
     <div className='flex flex-col items-center min-h-screen w-full bg-gray-100 '>
-      <div className="h-16 w-full mb-4">
+      <div className="w-full mb-4">
         <AppBar />
       </div>
       <div className="py-8 sm:py-12 w-full max-w-6xl bg-white rounded-lg px-2 sm:px-10">
